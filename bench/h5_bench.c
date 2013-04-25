@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 
 	printf("%d\n", mpi_rank);
 
-    long total_samples = 20000;
+    long total_samples = 20000000;
     long samples_per_process = total_samples/2;
 
     thin_data_struct * data = (thin_data_struct *) malloc (samples_per_process * sizeof (thin_data_struct));

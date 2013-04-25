@@ -7,18 +7,30 @@
 #include <hdf5.h>
 #include <mpi.h>
 
-void read_hdf5_thin(int pid, long first_elem, int num_elements, thin_data_struct *data, const char * filename)
+void print_timing(int mpi_rank, const char * tag, double start_clock)
+{
+    MPI_Barrier(MPI_COMM_WORLD);
+    if (mpi_rank == 0) { /* use time on master node */
+        printf("Timing: %s = %.3fs\n", tag, MPI_Wtime()-start_clock);
+    }
+}
+
+void read_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_struct *data, const char * filename)
 {
     hsize_t start[1]; hsize_t count[1]; hsize_t stride[1]; hsize_t dims[1]; 
     int i, n;
     bool val;
+    double clock;
 
     stride[0] = 1; count[0] = num_elements;
     start[0] = first_elem;
 
-	printf("%d read_hdf5_thin ", pid);
+	printf("%d read_hdf5_thin ", mpi_rank);
     printf(" %ld -" , (long)start[0]);
 	printf(" %ld \n", (long)count[0]);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    clock = MPI_Wtime();
 
     ///* setup file access template */
     hid_t acc_tpl1 = H5Pcreate (H5P_FILE_ACCESS); assert(acc_tpl1 != FAIL);
@@ -57,12 +69,19 @@ void read_hdf5_thin(int pid, long first_elem, int num_elements, thin_data_struct
     start[0] = 0;
     ret=H5Sselect_hyperslab(mem_dataspace, H5S_SELECT_SET, start, stride, count, NULL); assert(ret != FAIL);
 
+    print_timing(mpi_rank, "setup", clock);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    clock = MPI_Wtime();
+
     /* read data collectively */
     ret = H5Dread(dataset, memtype, mem_dataspace, file_dataspace, xfer_plist, data);
     assert(ret != FAIL);
 
+    print_timing(mpi_rank, "read", clock);
+
     for (i=0; i<5; i++)
-        printf("%i: %i, %f, %f, %f\n", pid, data[i].L, data[i].D0, data[i].D1, data[i].D2);
+        printf("%i: %i, %f, %f, %f\n", mpi_rank, data[i].L, data[i].D0, data[i].D1, data[i].D2);
 
     H5Sclose(file_dataspace); H5Sclose(mem_dataspace); H5Pclose(xfer_plist); ret=H5Dclose(dataset); assert(ret != FAIL); 
     H5Fclose(fid1);
