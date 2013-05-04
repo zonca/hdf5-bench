@@ -5,13 +5,22 @@ if ($ENV{NERSC_HOST} STREQUAL hopper)
     set(CMAKE_C_COMPILER cc)
     set(CMAKE_CXX_COMPILER CC)
 
-else ($ENV{NERSC_HOST} STREQUAL carver)
+endif ($ENV{NERSC_HOST} STREQUAL hopper)
+
+if ($ENV{NERSC_HOST} STREQUAL carver)
 
     set(CMAKE_C_COMPILER mpicc)
     include_directories($ENV{HDF5_PAR_DIR}/include $ENV{OMPI_DIR}/include)
     link_directories ($ENV{OMPI_DIR}/lib)
 
-endif ($ENV{NERSC_HOST} STREQUAL hopper)
+endif ($ENV{NERSC_HOST} STREQUAL carver)
+
+if ($ENV{NERSC_HOST} STREQUAL gordon)
+
+    include_directories($ENV{HDF5HOME}/include)
+    link_directories($ENV{HDF5HOME}/lib)
+
+endif ($ENV{NERSC_HOST} STREQUAL gordon)
 
 project(hdf5-bench-proj C)
 
