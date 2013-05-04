@@ -1,0 +1,13 @@
+#!/bin/bash
+#PBS -q normal
+#PBS -l nodes=4:ppn=8:native
+#PBS -l walltime=0:10:00
+#PBS -N hdf5bench
+#PBS -o hdf5bench.out 
+#PBS -e hdf5bench.err 
+#PBS -M zonca@deepspace.ucsb.edu
+#PBS -m abe
+#PBS -V
+# Start of user commands - comments start with a hash sign (#)
+cd /home/zonca/p/dev/hdf5-bench/bench/build
+mpirun_rsh -np 32 -hostfile $PBS_NODEFILE ./h5_bench &> log/firsttest_32_3.log 
