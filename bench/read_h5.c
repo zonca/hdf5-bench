@@ -7,11 +7,11 @@
 #include <hdf5.h>
 #include <mpi.h>
 
-void print_timing(int mpi_rank, const char * tag, double start_clock)
+void print_timing(int mpi_rank, const char * filename, const char * tag, double start_clock)
 {
     MPI_Barrier(MPI_COMM_WORLD);
     if (mpi_rank == 0) { /* use time on master node */
-        printf("Timing: %s = %.3fs\n", tag, MPI_Wtime()-start_clock);
+        printf("Timing: %s %s = %.3fs\n", tag, filename, MPI_Wtime()-start_clock);
     }
 }
 
@@ -69,7 +69,7 @@ void read_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_s
     start[0] = 0;
     ret=H5Sselect_hyperslab(mem_dataspace, H5S_SELECT_SET, start, stride, count, NULL); assert(ret != FAIL);
 
-    print_timing(mpi_rank, "setup", clock);
+    print_timing(mpi_rank, filename, "setup", clock);
 
     MPI_Barrier(MPI_COMM_WORLD);
     clock = MPI_Wtime();
@@ -78,7 +78,7 @@ void read_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_s
     ret = H5Dread(dataset, memtype, mem_dataspace, file_dataspace, xfer_plist, data);
     assert(ret != FAIL);
 
-    print_timing(mpi_rank, "read", clock);
+    print_timing(mpi_rank, filename, "read", clock);
 
     for (i=0; i<5; i++)
         printf("%i: %i, %f, %f, %f\n", mpi_rank, data[i].L, data[i].D0, data[i].D1, data[i].D2);
