@@ -17,13 +17,13 @@ int main(int argc, char **argv)
 
 	printf("%d\n", mpi_rank);
 
-    long samples_per_process = 805306368/5/2/3/5; // 6GB
+    long samples_per_process = 805306368/5; // 6GB
 
     thin_data_struct * data = (thin_data_struct *) malloc (samples_per_process * sizeof (thin_data_struct));
     
     //read_hdf5_thin(mpi_rank, mpi_rank * samples_per_process, samples_per_process, data, "../testdata/s32/thin2.h5");
-    read_hdf5_thin(mpi_rank, mpi_rank * samples_per_process, samples_per_process, data, "../testdata/thin.h5");
-    write_hdf5_thin(mpi_rank, mpi_rank * samples_per_process, samples_per_process, data, "../testdata/thinw.h5");
+    read_hdf5_thin(mpi_rank, mpi_rank * samples_per_process, samples_per_process, data, argv[1]);
+    write_hdf5_thin(mpi_rank, mpi_rank * samples_per_process, samples_per_process, data, argv[1]);
 
     MPI_Finalize();
 }

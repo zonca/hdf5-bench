@@ -26,6 +26,9 @@ void read_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_s
     start[0] = first_elem;
 
 	printf("%d read_hdf5_thin  %ld - %ld \n", mpi_rank, (long)start[0], (long)count[0]);
+    char fname[80];
+
+    fname = sprintf(fname, "../testdata/s%s/thin.h5", filename);
 
     MPI_Barrier(MPI_COMM_WORLD);
     clock = MPI_Wtime();
@@ -36,7 +39,7 @@ void read_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_s
     int ret = H5Pset_fapl_mpio(acc_tpl1, MPI_COMM_WORLD, MPI_INFO_NULL); assert(ret != FAIL);
 
     /* open the file collectively */
-    hid_t fid1 = H5Fopen(filename, H5F_ACC_RDONLY, acc_tpl1);
+    hid_t fid1 = H5Fopen(fname, H5F_ACC_RDONLY, acc_tpl1);
 
     /* Release file-access template */
     ret = H5Pclose(acc_tpl1); assert(ret != FAIL);
@@ -92,6 +95,9 @@ void write_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_
     bool val;
     double clock;
 
+    char fname[80];
+    fname = sprintf(fname, "../testdata/s%s/thinw.h5", filename);
+
     stride[0] = 1; 
     start[0] = first_elem;
 
@@ -106,7 +112,7 @@ void write_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_
     int ret = H5Pset_fapl_mpio(acc_tpl1, MPI_COMM_WORLD, MPI_INFO_NULL); assert(ret != FAIL);
 
     /* open the file collectively */
-    hid_t fid1=H5Fcreate(filename, H5F_ACC_TRUNC, H5P_DEFAULT, acc_tpl1);
+    hid_t fid1=H5Fcreate(fname, H5F_ACC_TRUNC, H5P_DEFAULT, acc_tpl1);
 
     /* Release file-access template */
     ret = H5Pclose(acc_tpl1); assert(ret != FAIL);
