@@ -25,9 +25,7 @@ void read_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_s
     stride[0] = 1; count[0] = num_elements;
     start[0] = first_elem;
 
-	printf("%d read_hdf5_thin ", mpi_rank);
-    printf(" %ld -" , (long)start[0]);
-	printf(" %ld \n", (long)count[0]);
+	printf("%d read_hdf5_thin  %ld - %ld \n", mpi_rank, (long)start[0], (long)count[0]);
 
     MPI_Barrier(MPI_COMM_WORLD);
     clock = MPI_Wtime();
@@ -80,8 +78,8 @@ void read_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_s
 
     print_timing(mpi_rank, filename, "read", clock);
 
-    for (i=0; i<5; i++)
-        printf("%i: %i, %f, %f, %f\n", mpi_rank, data[i].L, data[i].D0, data[i].D1, data[i].D2);
+    //for (i=0; i<5; i++)
+    //    printf("%i: %i, %f, %f, %f\n", mpi_rank, data[i].L, data[i].D0, data[i].D1, data[i].D2);
 
     H5Sclose(file_dataspace); H5Sclose(mem_dataspace); H5Pclose(xfer_plist); ret=H5Dclose(dataset); assert(ret != FAIL); 
     H5Fclose(fid1);
