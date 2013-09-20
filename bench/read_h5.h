@@ -13,5 +13,6 @@ typedef struct {
 
 #pragma pack(pop)  /* push current alignment to stack */
 void read_hdf5_thin(int pid, long first_elem, int num_elements, thin_data_struct *data, const char * filename);
+void write_hdf5_thin(int pid, long first_elem, int num_elements, thin_data_struct *data, const char * filename);
 
 #endif
