@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 
+set(CMAKE_C_COMPILER mpicc)
+
 if ($ENV{NERSC_HOST} STREQUAL hopper)
 
     set(CMAKE_C_COMPILER cc)
@@ -9,7 +11,6 @@ endif ($ENV{NERSC_HOST} STREQUAL hopper)
 
 if ($ENV{NERSC_HOST} STREQUAL carver)
 
-    set(CMAKE_C_COMPILER mpicc)
     include_directories($ENV{HDF5_PAR_DIR}/include $ENV{OMPI_DIR}/include)
     link_directories ($ENV{OMPI_DIR}/lib)
 
@@ -17,7 +18,6 @@ endif ($ENV{NERSC_HOST} STREQUAL carver)
 
 if ($ENV{NERSC_HOST} STREQUAL gordon)
 
-    set(CMAKE_C_COMPILER mpicc)
     include_directories($ENV{HDF5HOME}/include $ENV{MPIHOME}/include)
     link_directories($ENV{HDF5HOME}/lib $ENV{MPIHOME}/lib)
     set(EXTRALINK mpich)
@@ -35,5 +35,5 @@ target_link_libraries (read_h5 hdf5 ${EXTRALINK})
 add_executable (h5_bench h5_bench.c) 
 target_link_libraries (h5_bench read_h5 ${EXTRALINK})
 
-#set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
+#set(CMAKE_BUILD_TYPE Debug)
