@@ -28,7 +28,7 @@ void read_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_s
 	printf("%d read_hdf5_thin  %ld - %ld \n", mpi_rank, (long)start[0], (long)count[0]);
     char fname[80];
 
-    fname = sprintf(fname, "../testdata/s%s/thin.h5", filename);
+    sprintf(fname, "../testdata/s%s/thin.h5", filename);
 
     MPI_Barrier(MPI_COMM_WORLD);
     clock = MPI_Wtime();
@@ -96,7 +96,7 @@ void write_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_
     double clock;
 
     char fname[80];
-    fname = sprintf(fname, "../testdata/s%s/thinw.h5", filename);
+    sprintf(fname, "../testdata/s%s/thinw.h5", filename);
 
     stride[0] = 1; 
     start[0] = first_elem;
