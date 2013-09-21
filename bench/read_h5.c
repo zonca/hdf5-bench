@@ -94,6 +94,8 @@ void write_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_
     int i, n;
     bool val;
     double clock;
+    int size;
+    MPI_Comm_size (MPI_COMM_WORLD, &size);  /* get number of processes */
 
     char fname[80];
     sprintf(fname, "../testdata/s%s/thinw.h5", filename);
@@ -101,7 +103,7 @@ void write_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_
     stride[0] = 1; 
     start[0] = first_elem;
 
-	printf("%d write_hdf5_thin  %ld - %ld \n", mpi_rank, (long)start[0], (long)count[0]);
+	printf("%d write_hdf5_thin  %ld - %ld \n", mpi_rank, (long)start[0], (long)num_elements);
 
     MPI_Barrier(MPI_COMM_WORLD);
     clock = MPI_Wtime();
@@ -117,7 +119,7 @@ void write_hdf5_thin(int mpi_rank, long first_elem, int num_elements, thin_data_
     /* Release file-access template */
     ret = H5Pclose(acc_tpl1); assert(ret != FAIL);
 
-    count[0] = num_elements*3;
+    count[0] = num_elements*size;
     hid_t file_dataspace = H5Screate_simple (1, count, NULL); assert(file_dataspace != FAIL);
 
     /* create a compound hdf5 memory type */
