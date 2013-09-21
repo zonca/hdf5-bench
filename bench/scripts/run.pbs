@@ -14,5 +14,5 @@ cd /home/zonca/p/dev/hdf5-bench/bench/build
 
 for stripes in 16 32 64 128
 do
-    mpirun_rsh -np 256 -hostfile $PBS_NODEFILE ./h5_bench $stripes &> log/rwtest_$stripes.log 
+    mpirun_rsh -np 256 -hostfile $PBS_NODEFILE ./h5_bench $stripes &> ../log/rwtest_$stripes.log 
 done
